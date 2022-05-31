@@ -4,6 +4,7 @@ import rdkit
 
 
 smile = 'CC1(CCC(=C(C1)C2=CC=C(C=C2)Cl)CN3CCN(CC3)C4=CC(=C(C=C4)C(=O)NS(=O)(=O)C5=CC(=C(C=C5)NCC6CCOCC6)[N+](=O)[O-])OC7=CN=C8C(=C7)C=CN8)C'
+descriptor_functions = Chem.MolToMolBlock
 
 def main():
     mol_descriptors = {}
@@ -13,7 +14,8 @@ def main():
 
     #LogP
     mol_descriptors.update({"log_p": Crippen.MolLogP(m)})
-    #print(f"LogP: {log_p}")
+    this = list(map(descriptor_functions, [m]))
+    print(this)
 
     #Mol Wt
     mol_descriptors.update({"mol_wt": Descriptors.ExactMolWt(m)})

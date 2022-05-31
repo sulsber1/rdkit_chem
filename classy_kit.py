@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from textwrap import indent
 from rdkit import Chem
 from rdkit.Chem import Crippen, Descriptors, Lipinski
@@ -12,18 +13,39 @@ a json tries to searialize the rdkit object it will throw an error.
 lipenski_descriptors = {"5": {"mol_wt": 500, "ha_accepters": 10, "ha_donors": 5, "log_p": 5}, 
 "3": {"mol_wt": 300, "ha_accepters": 3, "ha_donors": 3, "log_p": 3, "rotatable_bonds": 3}}
 
+
+class Molecule_helper:
+    def __init__(self, smiles_list):
+        self.processed_data = []
+        self.process_samples(smiles_list)
+
+    def process_samples(self, smiles_list):
+        for smile in smiles_list:
+            self.processed_data.append(Molecule_obj(smile))
+
+    def to_json(self):
+        return json.dumps(self.__dict__, indent=4)
+
+    def get_processed_data(self):
+
+        return self.processed_data
+
 class Molecule_obj:
     
     def __init__(self, smiles):
         self.smiles = smiles
-        self.errors = []
-        self.get_descriptors()
-        self.get_visuals()
-        if not self.errors:
-            del self.Mol
+        if self.validate_smiles():
+            self.errors = {}
+            self.descriptors = {}
+            self.get_descriptors()
             self.get_lipinski_tests()
+            self.get_visuals()
+            del self.descriptors["mol"]
         else:
-            del self.Mol
+            self.add_error("SMILES", "SMILES cannot be parsed")
+
+    def validate_smiles(self):
+        return Chem.MolFromSmiles(self.smiles)
 
     def get_descriptors(self):
         self.mol()
@@ -32,6 +54,9 @@ class Molecule_obj:
         self.ha_accepters()
         self.ha_donors()
         self.rotatable_bonds()
+        self.heavy_atom_count()
+        self.aromatic_atoms()
+        self.aromatic_proportion()
         
     def get_visuals(self):
         self.to_mol_block()
@@ -40,81 +65,110 @@ class Molecule_obj:
         self.Lepinski_test("5")
         self.Lepinski_test("3")
 
-    def to_mol_block(self):
+    def try_method(self, methodToRun, args, descriptor_str, update_descriptors=True):
+        descriptor_result = None
         try:
-            self.mol_block = Chem.MolToMolBlock(self.Mol)
-        except:
-            self.add_error("mol_block")
+            if not args:
+                descriptor_result = methodToRun()
+            else:
+                descriptor_result = methodToRun(args)
+        except Exception as e:
+            self.add_error(descriptor_str, str(e))
+        finally:
+            if update_descriptors:
+                self.update_descriptors(descriptor_str, descriptor_result)
+            else:
+                return descriptor_result
 
-    def add_error(self, descriptor):
+    def add_error(self, descriptor, message):
         try:
             self.errors
         except AttributeError:
-            self.errors = []
+            self.errors = {}
         finally:
-            self.errors.append(descriptor)
+            self.errors.update({descriptor: message})
+            
+    def update_descriptors(self, descriptor_str, descriptor):
+        self.descriptors.update({descriptor_str: descriptor})  
 
     def mol(self):
-        try:
-            self.Mol = Chem.MolFromSmiles(self.smiles)
-        except:
-            self.add_error("mol")
+        self.try_method(Chem.MolFromSmiles, self.smiles, "mol")
 
     def log_p(self):
-        try:
-            self.log_p = Crippen.MolLogP(Chem.MolFromSmiles(self.smiles))
-
-        except:
-            self.add_error("log_p")
+        self.try_method(Descriptors.MolLogP, self.descriptors["mol"], "log_p")
 
     def molecular_wt(self):
-        try:
-            self.mol_wt = Descriptors.ExactMolWt(self.Mol)
-
-        except:
-            self.add_error("mol_wt")
+        self.try_method(Descriptors.ExactMolWt, self.descriptors["mol"], "mol_wt")
 
     def ha_accepters(self):
-        try:
-            self.ha_accepters = Lipinski.NumHAcceptors(self.Mol)
-        except:
-            self.add_error("ha_accepters")
+        self.try_method(Lipinski.NumHAcceptors, self.descriptors["mol"], "ha_accepters")
 
     def ha_donors(self):
-        try:
-            self.ha_donors = Lipinski.NumHDonors(self.Mol)
-        except:
-            self.add_error("ha_donors")
+        self.try_method(Lipinski.NumHDonors, self.descriptors["mol"], "ha_donors")
 
     def rotatable_bonds(self):
+        self.try_method(Lipinski.NumRotatableBonds, self.descriptors["mol"], "rotatable_bonds")
+
+    def heavy_atom_count(self):
+        self.try_method(Lipinski.HeavyAtomCount, self.descriptors["mol"], "heavy_atom_count")
+
+    def aromatic_atoms_method(self, mol):
+        aromatic_atoms = [mol.GetAtomWithIdx(i).GetIsAromatic() for i in range(mol.GetNumAtoms())]
+        aa_count = []
+        for i in aromatic_atoms:
+            if i == True:
+                aa_count.append(i)
+        sum_aa_count = sum(aa_count)
+        return sum_aa_count
+
+    def aromatic_atoms(self):
+        self.try_method(self.aromatic_atoms_method, self.descriptors["mol"], "aromatic_atoms")
+
+    def aromatic_proportion(self):
+        aromatic_prop = None
         try:
-            self.rotatable_bonds = Lipinski.NumRotatableBonds(self.Mol)
-        except:
-            self.add_error("rotatable_bonds")
+            aromatic_prop = self.descriptors["aromatic_atoms"] / self.descriptors["heavy_atom_count"]
+        except Exception as e:
+            self.add_error("aromatic_proportion", str(e))
+        finally:
+            self.update_descriptors("aromatic_proportion", aromatic_prop)
 
     def Lepinski_test(self, version):
-        json_obj = json.loads(json.dumps(self.__dict__, indent=4))
         local_Lipinski_reasons = []
-
-        for properties in lipenski_descriptors[version]:
-            if float(lipenski_descriptors[version][properties]) < float(json_obj[properties]):
-                local_Lipinski_reasons.append(f'{properties} of {json_obj[properties]} above Range of {lipenski_descriptors[version][properties]}')
-
         try:
             self.Lipinski
         except AttributeError:
             self.Lipinski = {}
         finally:
+
+            for properties in lipenski_descriptors[version]:
+                try:
+                    if float(lipenski_descriptors[version][properties]) < float(self.descriptors[properties]):
+                        local_Lipinski_reasons.append(f'{properties} of {self.descriptors[properties]} above Range of {lipenski_descriptors[version][properties]}')
+                except TypeError as e:
+                    local_Lipinski_reasons.append(f'{properties} of -> {self.descriptors[properties]} <- cannot be compared again Lipinski value')
+                except ValueError as e:
+                    local_Lipinski_reasons.append(f'{properties} of -> {self.descriptors[properties]} <- cannot be compared again Lipinski value')
+
             if local_Lipinski_reasons:
                 self.Lipinski.update({version: {"Result": False, "Reasoning": local_Lipinski_reasons}})
             else:
                 self.Lipinski.update({version: {"Result": True, "Reasoning": local_Lipinski_reasons}})
 
+    def to_mol_block(self):
+        self.mol_block = self.try_method(Chem.MolToMolBlock, self.descriptors["mol"], "mol_block", False)
+
     def to_json(self):
         return json.dumps(self.__dict__, indent=4)
+
+    
+
 # smile = 'CC1(CCC(=C(C1)C2=CC=C(C=C2)Cl)CN3CCN(CC3)C4=CC(=C(C=C4)C(=O)NS(=O)(=O)C5=CC(=C(C=C5)NCC6CCOCC6)[N+](=O)[O-])OC7=CN=C8C(=C7)C=CN8)C'
+# # smile = 'CC1(CCC(=C(C1)C2=CC=C(C=C2)Cl)CN3CCN(CC3)C4=CC(=C(C=C4)C(=O)NS(=O)(=O)C5=CC(=C(C=C5)NCC6CCOCC6)[N+](=O)[O-])OC7=CN=C8C(=C7)C=CN8)Ca'
 
-
-#obj = molecule_obj(smile)
-#obj.log_p()
-#print(json.dumps(obj.__dict__, indent=4))
+# # obj = Molecule_obj(smile)
+# obj = Molecule_helper([smile])
+# print(obj.get_processed_data())
+# # #obj.log_p()
+# # #print(json.dumps(obj.__dict__, indent=4))
+# # print(obj.to_json())
