@@ -49,9 +49,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
@@ -69,30 +66,30 @@
 ### Installation and starting the server
 
 1. Clone the repo:
-   ''' sh
+   ``` sh
    git clone https://github.com/sulsberd/rdkit_chem.git
-   '''
+   ```
    
 2. Initialize a virtual environment:
-   ''' sh
+   ``` sh
    python -m venv rd_smiles .
-   '''
+   ```
    
 3. Activate the virtual environment:
-   ''' sh
+   ``` sh
    Scripts\activate - Linux
    Scripts\activate - Windows
-   '''
+   ```
    
 4. Install dependencies within the virtual environment:
-   ''' sh
+   ``` sh
    pip install -r requirements.txt
-   '''
+   ```
    
 5. Activate a local instance of the server, the server will default to localhost:8080:
-   ''' sh
+   ``` sh
    python rd_smiles.py
-   '''
+   ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
