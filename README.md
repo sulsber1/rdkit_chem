@@ -59,7 +59,8 @@
 ### Built With
 
 * [python](https://python.org/)
-* [rdkit] (https://rdkit.org/)
+* [rdkit](https://rdkit.org/)
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
