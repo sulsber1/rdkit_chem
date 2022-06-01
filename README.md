@@ -73,6 +73,15 @@ Both GET and POST requests are handled at localhost:8080/<smiles> where <smiles>
 
 GET requests can be riskier and are not recommended, the parsing of the parameters from the URL isn't robust.
 POST requests can handle 0-n requests
+  
+POST body must contain a "smiles" key, followed by an array of comma seperated SMILES strings.
+  
+  ``` sh
+  {
+    "smiles": ["CC(=O)NCCc1c[nH]c2ccc(OC)cc12", "CC1(CCC(=C(C1)C2=CC=C(C=C2)Cl)CN3CCN(CC3)C4=CC(=C(C=C4)C(=O)NS(=O)(=O)C5=CC(=C(C=C5)NCC6CCOCC6)[N+](=O)[O-])OC7=CN=C8C(=C7)C=CN8)C",
+    "C=CC(=O)N1CCC[C@H](C1)N2C3=C(C(=N2)C4=CC=C(C=C4)OC5=CC=CC=C5)C(=NC=N3)N"]
+}
+```
 
 _For more examples, please refer to the [Documentation](https://example.com)_ (WIP)
 
