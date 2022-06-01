@@ -1,44 +1,176 @@
-"# rdkit_chem" 
+<div id="top"></div>
+
+<h3 align="center">project_title</h3>
+
+  <p align="center">
+    project_description
+    <br />
+    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    ·
+    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+  </p>
+</div>
 
 
-To run the server, run "python rd_smiles.py" which will deploy the development server to localhost:8080.
-![capture_example](https://user-images.githubusercontent.com/55814382/171219955-ebfb854e-e21a-48ba-ac46-3126c2d50ceb.JPG)
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
 
 
-To test the API in the development server try: 'localhost:8080/CC1(CCC(=C(C1)C2=CC=C(C=C2)Cl)CN3CCN(CC3)C4=CC(=C(C=C4)C(=O)NS(=O)(=O)C5=CC(=C(C=C5)NCC6CCOCC6)[N+](=O)[O-])OC7=CN=C8C(=C7)C=CN8)C'
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-{
-    "smiles": "CC1(CCC(=C(C1)C2=CC=C(C=C2)Cl)CN3CCN(CC3)C4=CC(=C(C=C4)C(=O)NS(=O)(=O)C5=CC(=C(C=C5)NCC6CCOCC6)[N+](=O)[O-])OC7=CN=C8C(=C7)C=CN8)C",
-    "errors": {},
-    "descriptors": {
-        "log_p": 8.659900000000006,
-        "mol_wt": 867.31809562,
-        "ha_accepters": 11,
-        "ha_donors": 3,
-        "rotatable_bonds": 13,
-        "heavy_atom_count": 61,
-        "aromatic_atoms": 27,
-        "aromatic_proportion": 0.4426229508196721
-    },
-    "Lipinski": {
-        "5": {
-            "Result": false,
-            "Reasoning": [
-                "mol_wt of 867.31809562 above Range of 500",
-                "ha_accepters of 11 above Range of 10",
-                "log_p of 8.659900000000006 above Range of 5"
-            ]
-        },
-        "3": {
-            "Result": false,
-            "Reasoning": [
-                "mol_wt of 867.31809562 above Range of 300",
-                "ha_accepters of 11 above Range of 3",
-                "log_p of 8.659900000000006 above Range of 3",
-                "rotatable_bonds of 13 above Range of 3"
-            ]
-        }
-    },
-    "mol_block": "\n     RDKit          2D\n\n 61 68  0  0  0  0  0  0  0  0999 V2000\n    9.3905   16.0775    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    8.5956   14.8054    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    8.2837   13.3382    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    6.8571   12.8747    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    5.7424   13.8783    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    6.0543   15.3456    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    7.4809   15.8091    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.9396   16.3493    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    5.2514   17.8165    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.1367   18.8202    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.7101   18.3567    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.3983   16.8894    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.5130   15.8857    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.5954   19.3604    0.0000 Cl  0  0  0  0  0  0  0  0  0  0  0  0\n    4.3158   13.4148    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.0040   11.9476    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.5774   11.4841    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.2655   10.0169    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.3802    9.0132    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    4.8068    9.4767    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    5.1187   10.9439    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.0684    7.5459    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.6418    7.0824    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.3299    5.6152    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.4446    4.6115    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.8712    5.0750    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.1831    6.5422    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.1328    3.1443    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.7062    2.6807    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    3.2475    2.1406    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.9356    0.6734    0.0000 S   0  0  0  0  0  0  0  0  0  0  0  0\n    1.4684    0.9852    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    4.4028    0.3615    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    2.6237   -0.7939    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.1971   -1.2574    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.8853   -2.7246    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.0000   -3.7283    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.4266   -3.2648    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.7385   -1.7976    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.6881   -5.1955    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.8028   -6.1992    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.4910   -7.6664    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.0644   -8.1300    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.7525   -9.5972    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.8672  -10.6009    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    3.2938  -10.1374    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.6057   -8.6701    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.5413   -3.1881    0.0000 N   0  0  0  0  0  4  0  0  0  0  0  0\n   -1.6560   -2.1844    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.8532   -4.6554    0.0000 O   0  0  0  0  0  1  0  0  0  0  0  0\n   -0.0967    5.1517    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.2114    6.1554    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.8995    7.6226    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.0143    8.6263    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.4408    8.1628    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.7527    6.6955    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.6380    5.6918    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.2445    6.5387    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.8546    7.9091    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.7399    8.9128    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    9.9864   14.2435    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  1  0\n  3  4  1  0\n  4  5  1  0\n  5  6  2  0\n  6  7  1  0\n  6  8  1  0\n  8  9  2  0\n  9 10  1  0\n 10 11  2  0\n 11 12  1  0\n 12 13  2  0\n 11 14  1  0\n  5 15  1  0\n 15 16  1  0\n 16 17  1  0\n 17 18  1  0\n 18 19  1  0\n 19 20  1  0\n 20 21  1  0\n 19 22  1  0\n 22 23  2  0\n 23 24  1  0\n 24 25  2  0\n 25 26  1  0\n 26 27  2  0\n 25 28  1  0\n 28 29  2  0\n 28 30  1  0\n 30 31  1  0\n 31 32  2  0\n 31 33  2  0\n 31 34  1  0\n 34 35  2  0\n 35 36  1  0\n 36 37  2  0\n 37 38  1  0\n 38 39  2  0\n 37 40  1  0\n 40 41  1  0\n 41 42  1  0\n 42 43  1  0\n 43 44  1  0\n 44 45  1  0\n 45 46  1  0\n 46 47  1  0\n 36 48  1  0\n 48 49  2  0\n 48 50  1  0\n 24 51  1  0\n 51 52  1  0\n 52 53  2  0\n 53 54  1  0\n 54 55  2  0\n 55 56  1  0\n 56 57  2  0\n 56 58  1  0\n 58 59  2  0\n 59 60  1  0\n  2 61  1  0\n  7  2  1  0\n 13  8  1  0\n 21 16  1  0\n 27 22  1  0\n 39 34  1  0\n 47 42  1  0\n 57 52  1  0\n 60 55  1  0\nM  CHG  2  48   1  50  -1\nM  END\n"
-}
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
+Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+### Built With
+
+* [python.js](https://python.org/)
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+This is an example of how you may give instructions on setting up your project locally.
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+This is an example of how to list things you need to use the software and how to install them.
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+### Installation
+
+1. Get a free API Key at [https://example.com](https://example.com)
+2. Clone the repo
+   ```sh
+   git clone https://github.com/github_username/repo_name.git
+   ```
+3. Install NPM packages
+   ```sh
+   npm install
+   ```
+4. Enter your API in `config.js`
+   ```js
+   const API_KEY = 'ENTER YOUR API';
+   ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+
+_For more examples, please refer to the [Documentation](https://example.com)_
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- ROADMAP -->
+## Roadmap
+
+- [ ] Feature 1
+- [ ] Feature 2
+- [ ] Feature 3
+    - [ ] Nested Feature
+
+See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- CONTACT -->
+## Contact
+
+Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+
+Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+* []()
+* []()
+* []()
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
