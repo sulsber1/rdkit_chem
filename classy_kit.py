@@ -1,11 +1,11 @@
 from multiprocessing.sharedctypes import Value
 from textwrap import indent
-from rdkit import Chem
+from rdkit import Chem, RDLogger
 from rdkit.Chem import Crippen, Descriptors, Lipinski
 import json
 
 """
-RDKIT makes an object that is throwing errors when serialized.  For simplicity the object is craeted, used,
+RDKIT makes an object that is throwing errors when serialized.  For simplicity the object is created, used,
 then removed before the json creation in the lipinski tests and the final json serialization.  If the order is changed or
 a json tries to searialize the rdkit object it will throw an error.
 """
@@ -16,36 +16,49 @@ lipenski_descriptors = {"5": {"mol_wt": 500, "ha_accepters": 10, "ha_donors": 5,
 
 class Molecule_helper:
     def __init__(self, smiles_list):
-        self.processed_data = []
+        self.results = []
         self.process_samples(smiles_list)
+        
+    def validate_smiles(self, smile) -> bool:
+        """ Currently the only validation step"""
+        try:
+            Chem.MolFromSmiles(smile)
+            return True
+        except:
+            self.results.append({"smiles" : smile, "errors" : [{"SMILES" : "Could not parse SMILES " }]})
+            return False
 
     def process_samples(self, smiles_list):
         for smile in smiles_list:
-            self.processed_data.append(Molecule_obj(smile))
+            if self.validate_smiles(smile):
+                try:
+                    self.results.append(Molecule_obj(smile).results)
+                except:
+                    self.results.append({"smiles" : smile, "errors" : [{"Unknown" : "An error occured that crashed RDKIT " }]})
 
     def to_json(self):
-        return json.dumps(self.__dict__, indent=4)
+        return json.dumps(self.results)
 
-    def get_processed_data(self):
-
-        return self.processed_data
+    def get_results(self):
+        return self.results
 
 class Molecule_obj:
     
     def __init__(self, smiles):
         self.smiles = smiles
-        if self.validate_smiles():
-            self.errors = {}
-            self.descriptors = {}
-            self.get_descriptors()
-            self.get_lipinski_tests()
-            self.get_visuals()
-            del self.descriptors["mol"]
-        else:
-            self.add_error("SMILES", "SMILES cannot be parsed")
+        self.errors = {}
 
-    def validate_smiles(self):
-        return Chem.MolFromSmiles(self.smiles)
+        self.descriptors = {}
+        self.get_descriptors()
+        
+        self.Lipinski = {}
+        self.get_lipinski_tests()
+
+        self.visualizations = {}
+        self.get_visuals()
+        
+        del self.descriptors["mol"]
+        self.prepare_json()
 
     def get_descriptors(self):
         self.mol()
@@ -144,11 +157,11 @@ class Molecule_obj:
             for properties in lipenski_descriptors[version]:
                 try:
                     if float(lipenski_descriptors[version][properties]) < float(self.descriptors[properties]):
-                        local_Lipinski_reasons.append(f'{properties} of {self.descriptors[properties]} above Range of {lipenski_descriptors[version][properties]}')
+                        local_Lipinski_reasons.append(f'{properties} = {self.descriptors[properties]} above Range of {lipenski_descriptors[version][properties]}')
                 except TypeError as e:
-                    local_Lipinski_reasons.append(f'{properties} of -> {self.descriptors[properties]} <- cannot be compared again Lipinski value')
+                    local_Lipinski_reasons.append(f'{properties} = -> {self.descriptors[properties]} <- cannot be compared again Lipinski value')
                 except ValueError as e:
-                    local_Lipinski_reasons.append(f'{properties} of -> {self.descriptors[properties]} <- cannot be compared again Lipinski value')
+                    local_Lipinski_reasons.append(f'{properties} = -> {self.descriptors[properties]} <- cannot be compared again Lipinski value')
 
             if local_Lipinski_reasons:
                 self.Lipinski.update({version: {"Result": False, "Reasoning": local_Lipinski_reasons}})
@@ -156,10 +169,13 @@ class Molecule_obj:
                 self.Lipinski.update({version: {"Result": True, "Reasoning": local_Lipinski_reasons}})
 
     def to_mol_block(self):
-        self.mol_block = self.try_method(Chem.MolToMolBlock, self.descriptors["mol"], "mol_block", False)
+        self.visualizations.update({"mol_block" : self.try_method(Chem.MolToMolBlock, self.descriptors["mol"], "mol_block", False)})
+
+    def prepare_json(self):
+        self.results = {"smiles" : self.smiles, "errors" : self.errors, "descriptors" : self.descriptors, "Lipinski" : self.Lipinski, "visualizations" : self.visualizations, }
 
     def to_json(self):
-        return json.dumps(self.__dict__, indent=4)
+        return json.dumps(self.results)
 
     
 
