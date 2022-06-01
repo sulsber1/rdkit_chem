@@ -68,21 +68,31 @@
 <!-- GETTING STARTED -->
 ### Installation and starting the server
 
-1. Clone the repo
+1. Clone the repo:
+   ''' sh
    git clone https://github.com/sulsberd/rdkit_chem.git
+   '''
    
-2. Initialize a virtual environment
+2. Initialize a virtual environment:
+   ''' sh
    python -m venv rd_smiles .
+   '''
    
-3. Activate the virtual environment
+3. Activate the virtual environment:
+   ''' sh
    Scripts\activate - Linux
    Scripts\activate - Windows
+   '''
    
-4. Install dependencies within the virtual environment
+4. Install dependencies within the virtual environment:
+   ''' sh
    pip install -r requirements.txt
+   '''
    
-5. Activate a local instance of the server, the server will default to localhost:8080
+5. Activate a local instance of the server, the server will default to localhost:8080:
+   ''' sh
    python rd_smiles.py
+   '''
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
