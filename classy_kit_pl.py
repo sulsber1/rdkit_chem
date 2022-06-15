@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Lipinski
 import json
