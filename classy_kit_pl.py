@@ -158,8 +158,12 @@ class Molecule_obj:
         return json.dumps(self.results)
 
 def get_descriptors(smiles):
+
     """Multiprocessing handler for the json - runs 1 less than the max CPUs available"""
-    with concurrent.futures.ProcessPoolExecutor(multiprocessing.cpu_count() - 1) as executor:
+    workers = multiprocessing.cpu_count() - 1
+    if workers == 0:
+        workers = 1
+    with concurrent.futures.ProcessPoolExecutor(workers) as executor:
         # Tested with CPU size of 3 and 31, chunk size of 128 was top performer
         chunksize = round(128)
         if chunksize == 0:
