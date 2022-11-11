@@ -1,6 +1,6 @@
-from flask import Flask, request, make_response
-import classy_kit_concurrent
 import json
+from flask import Flask, request, make_response
+import classy_kit_pl
 
 app = Flask(__name__)
 
@@ -10,7 +10,7 @@ def get_properties():
     if request.method == 'POST':
         try:
             content = request.get_json()
-            res = make_response(json.dumps(classy_kit_concurrent.get_descriptors(content)))
+            res = make_response(json.dumps(classy_kit_pl.get_descriptors(content)))
             res.headers.set('Content-Type', 'application/json')
             return (res, 200)
         except:
